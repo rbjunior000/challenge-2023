@@ -80,6 +80,7 @@ const Page: React.FC = () => {
     {
       key: "name",
       title: "Local",
+      minW: "550px",
     },
     {
       key: "options",
@@ -111,6 +112,15 @@ const Page: React.FC = () => {
     [getData, getLoading]
   );
 
+  const localName = useMemo(
+    () => (
+      <Text as="span" fontWeight={700}>
+        {selected?.name}
+      </Text>
+    ),
+    [selected]
+  );
+
   return (
     <AuthGuard as={React.Fragment} unauthorizedLayout={Error}>
       <Layout title={`Empresa ${companyData?.name}`} icon={MdCorporateFare}>
@@ -126,7 +136,7 @@ const Page: React.FC = () => {
         </Breadcrumb>
         {isNotEmpty ? (
           <Flex justifyContent={"end"}>
-            <Button onClick={() => onOpen()} colorScheme="brand">
+            <Button mb={4} onClick={() => onOpen()} colorScheme="brand">
               Adicionar Local
             </Button>
           </Flex>
@@ -177,7 +187,11 @@ const Page: React.FC = () => {
         isOpen={confirmIsOpen}
         onClose={confirmOnClose}
         header="Confirmação de exclusão"
-        message={`O local ${selected?.name} será excluído. Tem certeza dessa ação?`}
+        message={
+          <Text>
+            O local {localName} será excluído. Tem certeza dessa ação?
+          </Text>
+        }
         confirmScheme="red"
         confirmText="Excluir"
         onConfirm={() => fetchDelete().then(onSuccess)}

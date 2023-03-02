@@ -66,6 +66,7 @@ const Page: React.FC = () => {
     {
       key: "name",
       title: "Nome",
+      minW: "550px",
     },
     {
       key: "qty",
@@ -108,12 +109,21 @@ const Page: React.FC = () => {
     [getData, getLoading]
   );
 
+  const companyName = useMemo(
+    () => (
+      <Text as="span" fontWeight={700}>
+        {selected?.name}
+      </Text>
+    ),
+    [selected]
+  );
+
   return (
     <AuthGuard as={React.Fragment} unauthorizedLayout={Error}>
       <Layout title="Minhas empresas" icon={MdCorporateFare}>
         {isNotEmpty ? (
           <Flex justifyContent={"end"}>
-            <Button onClick={() => onOpen()} colorScheme="brand">
+            <Button mb={4} onClick={() => onOpen()} colorScheme="brand">
               Adicionar empresa
             </Button>
           </Flex>
@@ -163,9 +173,17 @@ const Page: React.FC = () => {
         isOpen={confirmIsOpen}
         onClose={confirmOnClose}
         header="Confirmação de exclusão"
-        message={`A empresa ${selected?.name} será excluída. Tem certeza dessa ação?`}
+        message={
+          <Text>
+            A empresa {companyName} será excluída. Tem certeza dessa ação?
+          </Text>
+        }
         confirmScheme="red"
         confirmText="Excluir"
+        headerProps={{
+          bgColor: "red.500",
+          textColor: "white",
+        }}
         onConfirm={() => fetchDelete().then(onSuccess)}
       />
     </AuthGuard>

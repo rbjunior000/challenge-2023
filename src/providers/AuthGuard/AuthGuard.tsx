@@ -4,7 +4,9 @@ import { useRouter } from "next/router";
 import React, { useEffect, useMemo } from "react";
 import { useAuth } from "../AuthProvider/AuthProvider";
 
-const Splash = ({ children, show }) => children;
+const Splash = ({ children, show }) => {
+  return show ? children : "loading";
+};
 
 const AuthGuard: React.FC<any> = ({
   children,
@@ -25,7 +27,7 @@ const AuthGuard: React.FC<any> = ({
     }
   });
   return (
-    <Splash show={!loading}>
+    <Splash show={user}>
       {unauthorized ? (
         <Layout>
           <Error403 />

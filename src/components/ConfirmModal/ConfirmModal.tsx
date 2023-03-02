@@ -41,7 +41,7 @@ const ModalConfirm: React.FC<any> = ({
       {overlay ? <ModalOverlay /> : null}
       <ModalContent>
         {header ? (
-          <ModalHeader mb={2} {...headerProps}>
+          <ModalHeader mb={2} {...headerProps} borderRadius="6px 6px 0 0;">
             {header}
           </ModalHeader>
         ) : null}
@@ -50,7 +50,7 @@ const ModalConfirm: React.FC<any> = ({
           <Heading as="h4" fontSize="16px" mb={2}>
             {title}
           </Heading>
-          <Text color="gray.500">{message}</Text>
+          <Text>{message}</Text>
         </Box>
         <ModalFooter>
           <ButtonGroup>

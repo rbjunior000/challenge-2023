@@ -24,17 +24,18 @@ const Table = <T,>({
   ...props
 }: any) => {
   return (
-    <CTable
-      sx={{
-        borderCollapse: "separate",
-        borderSpacing: "0px 10px",
-      }}
-      {...props}
-    >
+    <CTable {...props}>
       <Thead>
-        <Tr>
+        <Tr
+          textAlign="end"
+          bgColor="white"
+          boxShadow="base"
+          borderRadius={1}
+          my="16px"
+          h="74px"
+        >
           {headers.map((header: any) => (
-            <Td key={header.title} textAlign={header.align}>
+            <Td key={header.title} textAlign={header.align} minW={header.minW}>
               {header.title}
             </Td>
           ))}
@@ -53,7 +54,11 @@ const Table = <T,>({
           >
             {headers.map((header: any) =>
               header.key === "options" ? (
-                <Td key={header.key} textAlign={header.align}>
+                <Td
+                  key={header.key}
+                  textAlign={header.align}
+                  minW={header.minW}
+                >
                   <RenderActions
                     item={item}
                     actions={
@@ -63,6 +68,7 @@ const Table = <T,>({
                 </Td>
               ) : (
                 <Td
+                  minW={header.minW}
                   key={header.key}
                   textAlign={header.align}
                   textColor="gray.500"

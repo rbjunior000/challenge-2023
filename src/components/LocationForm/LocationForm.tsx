@@ -19,6 +19,7 @@ import * as yup from "yup";
 import { cnpj } from "cpf-cnpj-validator";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useAxios from "@/hooks/useAxios";
+import InputMask from "react-input-mask";
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -30,7 +31,7 @@ const schema = yup.object().shape({
   state: yup.string().required(),
 });
 
-const LocationForm: React.FC = ({
+const LocationForm: React.FC<any> = ({
   isOpen,
   onClose,
   initialValues,
@@ -71,7 +72,12 @@ const LocationForm: React.FC = ({
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader bgColor="brand.500" textColor="white" fontSize="2xl">
+          <ModalHeader
+            bgColor="brand.500"
+            textColor="white"
+            fontSize="2xl"
+            borderRadius={"6px 6px 0 0;"}
+          >
             Adicionar local
           </ModalHeader>
           <ModalCloseButton />
@@ -85,7 +91,12 @@ const LocationForm: React.FC = ({
                   label="Cep"
                   error={form.formState.errors?.zipCode?.message}
                 >
-                  <Input {...form.register("zipCode")} />
+                  <Input
+                    as={InputMask}
+                    mask="*****-***"
+                    maskChar={null}
+                    {...form.register("zipCode")}
+                  />
                 </FormItem>
               </GridItem>
               <GridItem>

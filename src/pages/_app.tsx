@@ -20,7 +20,13 @@ const colors = {
 
 const theme = extendTheme({
   colors,
-  components: {},
+  components: {
+    ModalHeader: {
+      baseStyle: {
+        borderRadius: "6px 6px 0 0;",
+      },
+    },
+  },
 });
 
 function MyApp({ Component, pageProps }: AppProps) {

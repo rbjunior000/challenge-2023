@@ -19,6 +19,7 @@ import { cnpj } from "cpf-cnpj-validator";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useAxios from "@/hooks/useAxios";
 import { useAuth } from "@/providers/AuthProvider/AuthProvider";
+import InputMask from "react-input-mask";
 
 // import { Container } from './styles';
 
@@ -32,7 +33,7 @@ const schema = yup.object().shape({
     ),
 });
 
-const CompanyForm: React.FC = ({
+const CompanyForm: React.FC<any> = ({
   isOpen,
   onClose,
   initialValues,
@@ -78,7 +79,12 @@ const CompanyForm: React.FC = ({
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader bgColor="brand.500" textColor="white" fontSize="2xl">
+          <ModalHeader
+            bgColor="brand.500"
+            textColor="white"
+            fontSize="2xl"
+            borderRadius={"6px 6px 0 0;"}
+          >
             Adicionar empresa
           </ModalHeader>
           <ModalCloseButton />
@@ -99,7 +105,12 @@ const CompanyForm: React.FC = ({
                 label="Cpnj"
                 error={form.formState.errors?.document?.message}
               >
-                <Input {...form.register("document")} />
+                <Input
+                  as={InputMask}
+                  mask="**.***.***/****-**"
+                  maskChar={null}
+                  {...form.register("document")}
+                />
               </FormItem>
             </SimpleGrid>
           </ModalBody>
