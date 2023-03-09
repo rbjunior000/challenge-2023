@@ -1,15 +1,27 @@
 import { ButtonGroup, IconButton } from "@chakra-ui/react";
+import { FC } from "react";
+import { IconType } from "react-icons";
 
-const RenderActions: React.FC<any> = ({ actions, item: itemRow }) => {
+interface RenderActionsProps {
+  actions: {
+    label: string;
+    icon: IconType;
+    color: string;
+    onClick: (item: any) => void;
+  }[];
+  item: any;
+}
+
+const RenderActions: FC<RenderActionsProps> = ({ actions, item }) => {
   return (
     <ButtonGroup>
-      {actions.map((Item: any) => (
+      {actions.map(({ icon: Icon, ...action }) => (
         <IconButton
-          key={Item.label}
-          aria-label={Item.label}
+          key={action.label}
+          aria-label={action.label}
           variant="ghost"
-          onClick={() => Item.onClick(itemRow)}
-          icon={<Item.icon color={Item.color} />}
+          onClick={() => action.onClick(item)}
+          icon={<Icon color={action.color} />}
         />
       ))}
     </ButtonGroup>

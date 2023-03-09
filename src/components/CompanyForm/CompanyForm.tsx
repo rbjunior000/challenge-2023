@@ -21,7 +21,12 @@ import useAxios from "@/hooks/useAxios";
 import { useAuth } from "@/providers/AuthProvider/AuthProvider";
 import InputMask from "react-input-mask";
 
-// import { Container } from './styles';
+export interface Company {
+  id: number;
+  name: string;
+  website: string;
+  document: string;
+}
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -33,30 +38,45 @@ const schema = yup.object().shape({
     ),
 });
 
-const CompanyForm: React.FC<any> = ({
-  isOpen,
-  onClose,
-  initialValues,
-  onSuccess = () => {},
-}) => {
+const CompanyForm: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  initialValues?: Company;
+  onSuccess?: (payload: any) => void;
+}> = ({ isOpen, onClose, initialValues, onSuccess = () => {} }) => {
   const form = useForm({
     resolver: yupResolver(schema),
-    defaultValues: initialValues,
+    defaultValues: initialValues || {
+      id: 0,
+      name: "",
+      website: "",
+      document: "",
+    },
   });
   const { user } = useAuth();
 
   const isEdit = !!initialValues;
 
   useEffect(() => {
-    initialValues ? form.reset(initialValues) : form.reset({});
-  }, [initialValues, form.reset, form]);
+    if (initialValues) {
+      form.reset(initialValues);
+    } else {
+      form.reset({
+        id: 0,
+        name: "",
+        website: "",
+        document: "",
+      });
+    }
+  }, [initialValues, form]);
 
   const [{ data: postData, error: postError }, fetch] = useAxios({
-    url: isEdit ? `company/${initialValues.id}` : "company",
+    url: isEdit ? `company/${initialValues?.id}` : "company",
     method: isEdit ? "PUT" : "POST",
   });
 
   const initialRef = React.useRef(null);
+
   return (
     <Modal
       initialFocusRef={initialRef}
@@ -69,11 +89,16 @@ const CompanyForm: React.FC<any> = ({
           fetch({
             data: {
               ...data,
-              userId: user.id,
+              userId: user?.id,
             },
           }).then((payload) => {
             onSuccess(payload);
-            form.reset({});
+            form.reset({
+              id: 0,
+              name: "",
+              website: "",
+              document: "",
+            });
           })
         )}
       >
@@ -83,9 +108,9 @@ const CompanyForm: React.FC<any> = ({
             bgColor="brand.500"
             textColor="white"
             fontSize="2xl"
-            borderRadius={"6px 6px 0 0;"}
+            borderRadius="6px 6px 0 0"
           >
-            Adicionar empresa
+            {isEdit ? "Editar empresa" : "Adicionar empresa"}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
@@ -102,7 +127,7 @@ const CompanyForm: React.FC<any> = ({
                 </FormItem>
               </GridItem>
               <FormItem
-                label="Cpnj"
+                label="CNPJ"
                 error={form.formState.errors?.document?.message}
               >
                 <Input

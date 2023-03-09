@@ -14,18 +14,25 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { ReactNode } from "react";
 import { FaChevronDown } from "react-icons/fa";
+import { IconType } from "react-icons/lib";
+
+interface LayoutProps {
+  title: string;
+  icon: IconType;
+  children: ReactNode;
+}
 
 const HEADER_HEIGHT = "64px";
 
-const Layout: React.FC = ({ title, icon, children }) => {
+const Layout: React.FC<LayoutProps> = ({ title, icon, children }) => {
   const { user, signOut } = useAuth();
   return (
     <SimpleGrid columns={1}>
       <GridItem height={HEADER_HEIGHT} bgColor="white">
         <Flex justifyContent="space-between" h="full">
-          <Flex ml={8} alignItems={"center"}>
+          <Flex ml={8} alignItems="center">
             <Icon mr={2} as={icon} size="sm" boxSize={8} />
             <Text color="black" fontWeight={700} fontSize="3xl">
               {title}

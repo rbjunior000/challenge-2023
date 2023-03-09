@@ -1,17 +1,36 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ReactNode } from "react";
 
 import isTokenExpired from "@/utils/isTokenExpired";
 import useStorage from "@/hooks/useStorage";
 import useAxios from "@/hooks/useAxios";
 
-const UserContext: any = React.createContext({ user: null });
+type User = {
+  token: string;
+  name?: string;
+  id?: string;
+};
 
-const AuthProvider: React.FC<any> = ({ children }) => {
+type UserContextType = {
+  user: User | null;
+  signOut: () => void;
+  signIn: (user: User) => void;
+};
+
+const UserContext = React.createContext<UserContextType>({
+  user: null,
+  signOut: () => {},
+  signIn: () => {},
+});
+
+type AuthProviderProps = {
+  children: ReactNode;
+};
+
+const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const router = useRouter();
-  //   const dispatch = useAppDispatch();
   const [token, setToken] = useStorage("user_token", "");
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const [{ data: getData, loading: getLoading, error: getError }, fetch] =
     useAxios({
@@ -21,7 +40,6 @@ const AuthProvider: React.FC<any> = ({ children }) => {
   useEffect(() => {
     if (!token || isTokenExpired(token)) {
       setToken("");
-      //   dispatch(userSignOut());
     }
   }, []);
 
@@ -31,7 +49,7 @@ const AuthProvider: React.FC<any> = ({ children }) => {
     router.push("/auth");
   };
 
-  const signIn = (user) => {
+  const signIn = (user: User) => {
     setUser(user);
     setToken(user.token);
     router.push("/companys");

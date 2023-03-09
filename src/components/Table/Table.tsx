@@ -62,7 +62,7 @@ const Table = <T,>({
                   <RenderActions
                     item={item}
                     actions={
-                      header.selector && (header.selector(item) as Array<T>)
+                      header.selector && (header.selector(item) as string[])
                     }
                   />
                 </Td>
@@ -74,7 +74,7 @@ const Table = <T,>({
                   textColor="gray.500"
                 >
                   {header.selector
-                    ? header.selector(item)
+                    ? (header.selector(item) as string)
                     : item[header.key as keyof T]}
                 </Td>
               )

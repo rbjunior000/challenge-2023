@@ -1,4 +1,4 @@
-import CompanyForm from "@/components/CompanyForm/CompanyForm";
+import CompanyForm, { Company } from "@/components/CompanyForm/CompanyForm";
 import Layout from "@/layout/dashboard";
 import AuthGuard from "@/providers/AuthGuard/AuthGuard";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
@@ -21,7 +21,7 @@ const Page: React.FC = () => {
     onOpen: confirmOnOpen,
   } = useDisclosure();
   const { query, replace, push } = useRouter();
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState<Company | undefined>(undefined);
 
   const [{ data: getData, loading: getLoading, error: getError }, fetch] =
     useAxios(
@@ -75,7 +75,7 @@ const Page: React.FC = () => {
     {
       key: "options",
       title: "Ações",
-      selector: (item) => [
+      selector: (item: any) => [
         {
           onClick: () => {
             setSelected(item);
@@ -134,7 +134,10 @@ const Page: React.FC = () => {
             <Flex justifyContent={"end"}>
               <BasePagination
                 total={getData?.meta.total || 1}
-                currentPage={query.page || 1}
+                initialState={{
+                  currentPage: Number(query.page) | 1,
+                  pageSize: 10,
+                }}
                 onPageChange={handlePageChange}
               />
             </Flex>
@@ -165,7 +168,7 @@ const Page: React.FC = () => {
         isOpen={isOpen}
         onSuccess={onSuccess}
         onClose={() => {
-          setSelected(null);
+          setSelected(undefined);
           onClose();
         }}
       />

@@ -11,7 +11,17 @@ import {
 import { Text } from "@chakra-ui/react";
 import React from "react";
 
-const BasePagination: React.FC<any> = ({
+interface BasePaginationProps {
+  total: number;
+  limits?: {
+    inner: number;
+    outer: number;
+  };
+  initialState?: { currentPage: number; pageSize: number };
+  onPageChange: (nextPage: number) => void;
+}
+
+const BasePagination: React.FC<BasePaginationProps> = ({
   total,
   limits,
   initialState,
@@ -27,7 +37,6 @@ const BasePagination: React.FC<any> = ({
   });
 
   const handlePageChange = (nextPage: number): void => {
-    // -> request new data using the page number
     setCurrentPage(nextPage);
     onPageChange(nextPage);
   };
@@ -45,10 +54,11 @@ const BasePagination: React.FC<any> = ({
           Anterior
         </PaginationPrevious>
         <PaginationNext size="sm" colorScheme="brand">
-          Proxímo
+          Próximo
         </PaginationNext>
       </PaginationContainer>
     </Pagination>
   );
 };
+
 export default BasePagination;

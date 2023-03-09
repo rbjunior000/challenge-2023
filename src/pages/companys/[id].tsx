@@ -19,7 +19,7 @@ import Table from "@/components/Table/Table";
 import { FaArrowLeft, FaPen, FaRegBuilding, FaTrash } from "react-icons/fa";
 import BasePagination from "@/components/Paginator/Paginator";
 import { useRouter } from "next/router";
-import LocationForm from "@/components/LocationForm/LocationForm";
+import LocationForm, { Location } from "@/components/LocationForm/LocationForm";
 import ModalConfirm from "@/components/ConfirmModal/ConfirmModal";
 import Link from "next/link";
 
@@ -28,7 +28,7 @@ const Error = () => <div>error</div>;
 const Page: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { query, isReady } = useRouter();
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState<Location | undefined>(undefined);
 
   const {
     isOpen: confirmIsOpen,
@@ -85,7 +85,7 @@ const Page: React.FC = () => {
     {
       key: "options",
       title: "Ações",
-      selector: (item) => [
+      selector: (item: any) => [
         {
           onClick: () => {
             setSelected(item);
@@ -147,7 +147,10 @@ const Page: React.FC = () => {
             <Flex justifyContent={"end"}>
               <BasePagination
                 total={getData?.meta.total || 1}
-                currentPage={query.page || 1}
+                initialState={{
+                  currentPage: Number(query.page) | 1,
+                  pageSize: 10,
+                }}
                 onPageChange={handlePageChange}
               />
             </Flex>
@@ -179,7 +182,7 @@ const Page: React.FC = () => {
         isOpen={isOpen}
         onSuccess={onSuccess}
         onClose={() => {
-          setSelected(null);
+          setSelected(undefined);
           onClose();
         }}
       />

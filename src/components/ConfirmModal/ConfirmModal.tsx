@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC, ReactNode } from "react";
 import {
   Box,
   Button,
@@ -14,7 +14,24 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-const ModalConfirm: React.FC<any> = ({
+interface ModalConfirmProps {
+  onConfirm: () => void;
+  header?: string;
+  overlay?: boolean;
+  hasCloseBtn?: boolean;
+  confirmText: string;
+  cancelText?: string;
+  confirmLoading?: boolean;
+  confirmScheme?: string;
+  isOpen: boolean;
+  onClose: () => void;
+  modalProps?: any;
+  headerProps?: any;
+  title?: string;
+  message: string | ReactNode;
+}
+
+const ModalConfirm: FC<ModalConfirmProps> = ({
   onConfirm,
   header,
   overlay = true,

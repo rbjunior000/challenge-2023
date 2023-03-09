@@ -13,8 +13,13 @@ const axios = Axios.create({
 });
 
 axios.interceptors.request.use((config) => {
-  config.headers.Authorization =
-    `Bearer ${JSON.parse(window?.localStorage?.getItem("user_token"))}` || "";
+  if (typeof window !== "undefined") {
+    const userToken = window.localStorage.getItem("user_token");
+    config.headers.Authorization = `Bearer ${
+      userToken !== null ? JSON.parse(userToken) : ""
+    }`;
+  }
+
   return config;
 });
 

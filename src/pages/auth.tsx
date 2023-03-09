@@ -18,6 +18,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useStorage from "@/hooks/useStorage";
 import { useAuth } from "@/providers/AuthProvider/AuthProvider";
+import { toast } from "react-toastify";
 
 const schema = (isSignUp: boolean) =>
   yup.object().shape({
@@ -28,13 +29,21 @@ const schema = (isSignUp: boolean) =>
       .min(8, "Password is too short - should be 8 chars minimum.")
       .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
     confirmPassword: isSignUp
-      ? yup.string().oneOf([yup.ref("password"), null], "Passwords must match")
+      ? yup
+          .string()
+          .oneOf([yup.ref("password"), undefined], "Passwords must match")
       : yup.string(),
   });
 
 const SignUpForm = () => {
   const form = useForm({
     resolver: yupResolver(schema(true)),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
   const { push } = useRouter();
   const [
@@ -51,7 +60,7 @@ const SignUpForm = () => {
         fetchSignUp({ data }).then(() =>
           push({
             query: {},
-          })
+          }).catch((error) => toast.error(error))
         )
       )}
     >
@@ -103,6 +112,10 @@ const SignUpForm = () => {
 const SignInForm = () => {
   const form = useForm({
     resolver: yupResolver(schema(false)),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
   const { signIn } = useAuth();
   const [token, setToken] = useStorage("user_token", "");
@@ -115,9 +128,11 @@ const SignInForm = () => {
   return (
     <form
       onSubmit={form.handleSubmit((data) =>
-        fetch({ data }).then((payload: any) => {
-          signIn(payload.data);
-        })
+        fetch({ data })
+          .then((payload: any) => {
+            signIn(payload.data);
+          })
+          .catch(({ response }) => toast.error(response.data.message))
       )}
     >
       <Flex flexDir="column" p="120px">

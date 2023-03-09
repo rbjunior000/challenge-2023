@@ -16,10 +16,20 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import FormItem from "../FormItem";
 import * as yup from "yup";
-import { cnpj } from "cpf-cnpj-validator";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useAxios from "@/hooks/useAxios";
 import InputMask from "react-input-mask";
+
+export interface Location {
+  id: number;
+  name: string;
+  zipCode: string;
+  street: string;
+  number: string;
+  district: string;
+  city: string;
+  state: string;
+}
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -31,7 +41,15 @@ const schema = yup.object().shape({
   state: yup.string().required(),
 });
 
-const LocationForm: React.FC<any> = ({
+type LocationFormProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  initialValues?: Location;
+  onSuccess?: () => void;
+  companyId?: string | string[] | undefined;
+};
+
+const LocationForm: React.FC<LocationFormProps> = ({
   isOpen,
   onClose,
   initialValues,
@@ -47,15 +65,16 @@ const LocationForm: React.FC<any> = ({
 
   useEffect(() => {
     initialValues ? form.reset(initialValues) : form.reset({});
-  }, [initialValues, form.reset, form]);
+  }, [initialValues, form]);
 
   const [{ data: postData, loading: postLoading, error: postError }, fetch] =
     useAxios({
-      url: isEdit ? `location/${initialValues.id}` : "location",
+      url: isEdit ? `location/${initialValues?.id}` : "location",
       method: isEdit ? "PUT" : "POST",
     });
 
   const initialRef = React.useRef(null);
+
   return (
     <Modal
       initialFocusRef={initialRef}
@@ -78,7 +97,7 @@ const LocationForm: React.FC<any> = ({
             fontSize="2xl"
             borderRadius={"6px 6px 0 0;"}
           >
-            Adicionar local
+            {isEdit ? "Editar local" : "Adicionar local"}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
@@ -93,7 +112,7 @@ const LocationForm: React.FC<any> = ({
                 >
                   <Input
                     as={InputMask}
-                    mask="*****-***"
+                    mask="99999-999"
                     maskChar={null}
                     {...form.register("zipCode")}
                   />
